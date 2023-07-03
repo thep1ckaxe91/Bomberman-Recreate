@@ -1,8 +1,8 @@
 import pygame
-
+from App import App
 class SpriteHandler:
 
-    def __init__(self, app) -> None:
+    def __init__(self, app : App) -> None:
         self.app = app
         self.group = pygame.sprite.Group()
         self.sprites = []
