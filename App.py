@@ -1,5 +1,6 @@
 from pygame._sdl2.video import Window,Texture,Image,Renderer
 import pygame
+from settings import *
 class App:
 
     def __init__(self,WIN_SIZE = [1366,768],Title = "pygame", refresh_rate = 60, ) -> None:
@@ -12,10 +13,7 @@ class App:
         self.dt = 0.0
 
     def check_events(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+        pass
 
     def update(self):
         '''
@@ -44,7 +42,41 @@ class MainMenu(App):
         super().update()
     
     def draw(self):
-        super().draw()
+        self.renderer.clear()
+
+        self.renderer.present()
+    
+    def check_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+    def run(self):
+        super().run()
+
+class GamePlay(App):
+    def __init__(self, WIN_SIZE=[1366, 768], Title="pygame") -> None:
+        super().__init__(WIN_SIZE, Title)
+
+    def update(self):
+        super().update()
+    
+    def draw(self):
+        self.renderer.clear()
+        self.window.title = str(1/max(0.001,self.dt))
+        self.renderer.present()
+        
+    
+    def check_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+
+    def run(self):
+        super().run()
+        
     
 class SceneManager:
 
@@ -55,6 +87,6 @@ class SceneManager:
         self.scenes.append(scene)
     
     def run(self):
-        if len(self.scenes > 0):
+        if len(self.scenes)> 0:
             self.scenes[-1].run()
         
