@@ -1,9 +1,15 @@
+import math
+import os
+import sys
+
 import pygame
 import pygame.freetype as ft
-import sys,math,os
-from pygame._sdl2.video import Window,Texture,Image,Renderer
-from sprite_classes import SpriteUnit,SpriteHandler
+from pygame._sdl2.video import Image, Renderer, Texture, Window
+
 from App import *
+from settings import *
+
+screen_surf = pygame.display.set_mode((1,1),pygame.NOFRAME)
 
 if __name__ == "__main__":
     scene_manager = SceneManager()

@@ -1,10 +1,16 @@
-from pygame._sdl2.video import Window,Texture,Image,Renderer
 import pygame
+from pygame._sdl2.video import Image, Renderer, Texture, Window
+
+from Entity import *
 from settings import *
+from sprite_classes import SpriteHandler
+
+
 class App:
 
-    def __init__(self,WIN_SIZE = [1366,768],Title = "pygame", refresh_rate = 60) -> None:
+    def __init__(self,WIN_SIZE = [WIDTH,HEIGHT],Title = "pygame", refresh_rate = 60) -> None:
         self.window = Window(title=Title,size = WIN_SIZE)
+        # self.window.resizable = True
         self.camera_center = pygame.math.Vector2(WIN_SIZE[0]/2,WIN_SIZE[1]/2)
         self.renderer = Renderer(self.window)
         self.renderer.draw_color = (0,0,0,255)
@@ -20,7 +26,7 @@ class App:
         '''
         Update delta time and refresh time
         '''
-        self.dt = self.clock.tick() * 0.001
+        self.dt = self.clock.tick(FPS_CAP) * 0.001
         self.refresh_time_cnt += self.dt
 
     def draw(self):
@@ -54,29 +60,46 @@ class MainMenu(App):
                 quit()
 
     def run(self):
-        super().run()
+        while True:
+            self.check_events()
+            self.update()
+            if self.refresh_time_cnt >= 1/self.refresh_rate:
+                self.draw()
+                self.refresh_time_cnt -= 1/self.refresh_rate
 
 class GamePlay(App):
     def __init__(self, WIN_SIZE=[1366, 768], Title="pygame") -> None:
         super().__init__(WIN_SIZE, Title)
+        self.dynamic_group = SpriteHandler(self)
+        self.static_group = SpriteHandler(self)
+        self.dynamic_group.add(Player(self.dynamic_group,(50,500)))
 
     def update(self):
+        self.dynamic_group.update()
+        self.static_group.update()
         super().update()
     
     def draw(self):
         self.renderer.clear()
         self.window.title = str(1/max(0.001,self.dt))
+        self.dynamic_group.draw()
+        self.static_group.draw()
         self.renderer.present()
         
     
     def check_events(self):
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 pygame.quit()
                 quit()
 
     def run(self):
-        super().run()
+        while True:
+            self.check_events()
+            self.update()
+            if self.refresh_time_cnt >= 1/self.refresh_rate:
+                self.draw()
+                self.refresh_time_cnt -= 1/self.refresh_rate
         
     
 class SceneManager:

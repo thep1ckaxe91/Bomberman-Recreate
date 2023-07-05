@@ -1,5 +1,11 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 import pygame
-from App import App
+
+if TYPE_CHECKING:
+    from App import App
 class SpriteHandler:
 
     def __init__(self, app : App) -> None:
@@ -30,11 +36,6 @@ class SpriteHandler:
         
 class SpriteUnit(pygame.sprite.Sprite):
     
-    def __init__(self,handler : SpriteHandler, pos) -> None:
+    def __init__(self,handler : SpriteHandler) -> None:
         super().__init__()
         self.handler = handler
-        self.x,self.y = pos[0],pos[1]
-
-    def update(self):
-        self.rect.center = (self.x,self.y)
-        return super().update()
