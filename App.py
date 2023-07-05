@@ -3,8 +3,9 @@ import pygame
 from settings import *
 class App:
 
-    def __init__(self,WIN_SIZE = [1366,768],Title = "pygame", refresh_rate = 60, ) -> None:
+    def __init__(self,WIN_SIZE = [1366,768],Title = "pygame", refresh_rate = 60) -> None:
         self.window = Window(title=Title,size = WIN_SIZE)
+        self.camera_center = pygame.math.Vector2(WIN_SIZE[0]/2,WIN_SIZE[1]/2)
         self.renderer = Renderer(self.window)
         self.renderer.draw_color = (0,0,0,255)
         self.refresh_rate = refresh_rate
