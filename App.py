@@ -2,6 +2,7 @@ import pygame
 from pygame._sdl2.video import Image, Renderer, Texture, Window
 
 from Entity import *
+from graphics_load import GamePlayGraphics
 from settings import *
 from sprite_classes import SpriteHandler
 
@@ -42,7 +43,7 @@ class App:
 
 class MainMenu(App):
 
-    def __init__(self, WIN_SIZE=[1366, 768], Title="pygame") -> None:
+    def __init__(self, WIN_SIZE=[WIDTH,HEIGHT], Title="pygame") -> None:
         super().__init__(WIN_SIZE, Title)
 
     def update(self):
@@ -68,22 +69,27 @@ class MainMenu(App):
                 self.refresh_time_cnt -= 1/self.refresh_rate
 
 class GamePlay(App):
-    def __init__(self, WIN_SIZE=[1366, 768], Title="pygame") -> None:
+    def __init__(self, WIN_SIZE=[WIDTH,HEIGHT], Title="pygame") -> None:
         super().__init__(WIN_SIZE, Title)
         self.dynamic_group = SpriteHandler(self)
         self.static_group = SpriteHandler(self)
-        self.dynamic_group.add(Player(self.dynamic_group,(50,500)))
+        self.player = Player(self.dynamic_group,(50,500))
+        self.graphics = GamePlayGraphics(self.renderer)
+        self.dynamic_group.add(self.player)
+        self.static_group.add(PlayField(self.static_group,(WIDTH/2,HEIGHT/2)))
 
     def update(self):
+        super().update()
         self.dynamic_group.update()
         self.static_group.update()
-        super().update()
+        self.camera_center = self.player.world_pos
+        # print(self.player.world_pos)
     
     def draw(self):
         self.renderer.clear()
-        self.window.title = str(1/max(0.001,self.dt))
-        self.dynamic_group.draw()
+        self.window.title = str(int(self.clock.get_fps()))
         self.static_group.draw()
+        self.dynamic_group.draw()
         self.renderer.present()
         
     
